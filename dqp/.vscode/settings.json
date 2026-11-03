@@ -1,0 +1,8 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["*.dqp.json"],
+      "url": "./schemas/dqp-1.0.schema.json"
+    }
+  ]
+}

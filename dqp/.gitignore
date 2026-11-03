@@ -1,0 +1,8 @@
+/target/
+/dist/
+/downloaded/
+*.dqpc
+/session*.json
+/demo-session.json
+/starter/resultat*.json
+__pycache__/

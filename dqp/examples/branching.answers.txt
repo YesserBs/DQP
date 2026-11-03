@@ -1,0 +1,6 @@
+a
+Je pensais que les indices commençaient à 1.
+a
+
+b
+

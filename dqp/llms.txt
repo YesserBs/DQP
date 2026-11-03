@@ -1,0 +1,15 @@
+# DQP — Diverging Questions Protocol
+
+> Experimental deterministic questionnaire compiler and runtime. Software 0.1.1; source format DQP 1.0.
+
+## Authoring reference
+- [Self-contained DQP 1.0 guide](docs/v1/AI_GUIDE.md): Read this before generating questionnaires.
+- [Full specification](docs/SPECIFICATION.md): Execution semantics and diagnostics.
+- [JSON Schema](schemas/dqp-1.0.schema.json): Structural validation; compiler checks additional invariants.
+
+## Usage
+- [Quickstart](docs/QUICKSTART.md)
+- [Installation](docs/INSTALLATION.md)
+- [Worked scenario](examples/branching.dqp.json)
+
+This file is a navigation aid. Its presence does not guarantee automatic discovery by an AI system. Do not claim DQP conformance without checking the guide; ask for its text if it cannot be retrieved.

@@ -1,0 +1,179 @@
+{
+  "result": {
+    "report_version": "1.0",
+    "engine_version": "0.1.1",
+    "source_sha256": "549034218e21e2c3c98aa4825019bab5b2ca1eaab547d5f42127d4a924b882a6",
+    "scenario_id": "branching",
+    "title": "Révision des listes Python",
+    "description": "Vérifier la compréhension des indices et proposer un rattrapage ciblé.",
+    "feedback": "end",
+    "status": "completed",
+    "next_question": null,
+    "counters": {
+      "answered_count": 3,
+      "correct_count": 2,
+      "consecutive_errors": 0
+    },
+    "concepts": {
+      "indices": {
+        "answered": 3,
+        "correct": 2
+      }
+    },
+    "steps": [
+      {
+        "number": 1,
+        "question": {
+          "id": "q1",
+          "concepts": [
+            "indices"
+          ],
+          "prompt": "Que vaut [10, 20, 30][1] ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "10"
+            },
+            {
+              "id": "b",
+              "text": "20"
+            },
+            {
+              "id": "c",
+              "text": "30"
+            }
+          ],
+          "answer": {
+            "choice": "b",
+            "explanation": "L’indice 1 désigne le deuxième élément."
+          },
+          "routes": [
+            {
+              "id": "wrong_to_basics",
+              "when": {
+                "kind": "compare",
+                "metric": "last_answer.correct",
+                "operator": "eq",
+                "value": false
+              },
+              "goto": "basics"
+            }
+          ],
+          "next": "q2"
+        },
+        "input": {
+          "choice": "a",
+          "justification": "Je pensais que les indices commençaient à 1."
+        },
+        "correct": false,
+        "counters": {
+          "answered_count": 1,
+          "correct_count": 0,
+          "consecutive_errors": 1
+        },
+        "evaluated_rules": [
+          {
+            "rule_id": "wrong_to_basics",
+            "matched": true
+          }
+        ],
+        "selected_rule": "wrong_to_basics",
+        "destination": "basics",
+        "feedback_after_answer": false,
+        "prior_feedback": []
+      },
+      {
+        "number": 2,
+        "question": {
+          "id": "basics",
+          "concepts": [
+            "indices"
+          ],
+          "prompt": "Quel est l’indice du premier élément ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "0"
+            },
+            {
+              "id": "b",
+              "text": "1"
+            }
+          ],
+          "answer": {
+            "choice": "a",
+            "explanation": "Les indices commencent à zéro."
+          },
+          "routes": [],
+          "next": "q2"
+        },
+        "input": {
+          "choice": "a",
+          "justification": null
+        },
+        "correct": true,
+        "counters": {
+          "answered_count": 2,
+          "correct_count": 1,
+          "consecutive_errors": 0
+        },
+        "evaluated_rules": [],
+        "selected_rule": null,
+        "destination": "q2",
+        "feedback_after_answer": false,
+        "prior_feedback": []
+      },
+      {
+        "number": 3,
+        "question": {
+          "id": "q2",
+          "concepts": [
+            "indices"
+          ],
+          "prompt": "Que vaut [4, 8][-1] ?",
+          "choices": [
+            {
+              "id": "a",
+              "text": "4"
+            },
+            {
+              "id": "b",
+              "text": "8"
+            }
+          ],
+          "answer": {
+            "choice": "b",
+            "explanation": "L’indice -1 désigne le dernier élément."
+          },
+          "routes": [],
+          "next": "end"
+        },
+        "input": {
+          "choice": "b",
+          "justification": null
+        },
+        "correct": true,
+        "counters": {
+          "answered_count": 3,
+          "correct_count": 2,
+          "consecutive_errors": 0
+        },
+        "evaluated_rules": [],
+        "selected_rule": null,
+        "destination": "end",
+        "feedback_after_answer": false,
+        "prior_feedback": []
+      }
+    ]
+  },
+  "metadata": {
+    "started_unix_ms": 1793703681977,
+    "updated_unix_ms": 1793703681985,
+    "reason": "completed",
+    "feedback_written": [
+      "q1",
+      "basics",
+      "q2"
+    ]
+  }
+}

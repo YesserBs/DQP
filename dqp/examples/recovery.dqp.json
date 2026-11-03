@@ -1,0 +1,153 @@
+{
+  "dqp_version": "1.0",
+  "id": "recovery",
+  "title": "Révision des listes Python",
+  "description": "Vérifier la compréhension des indices et proposer un rattrapage ciblé.",
+  "start": "q1",
+  "settings": {
+    "feedback": "end"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "[1, 2][0] vaut ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        }
+      ],
+      "answer": {
+        "choice": "a",
+        "explanation": "L’indice zéro est le premier."
+      },
+      "routes": [],
+      "next": "q2"
+    },
+    {
+      "id": "q2",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "[3, 4][1] vaut ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "4"
+        }
+      ],
+      "answer": {
+        "choice": "b",
+        "explanation": "L’indice un est le deuxième."
+      },
+      "routes": [],
+      "next": "q3"
+    },
+    {
+      "id": "q3",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "[5, 6][-1] vaut ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "6"
+        }
+      ],
+      "answer": {
+        "choice": "b",
+        "explanation": "L’indice -1 est le dernier."
+      },
+      "routes": [
+        {
+          "id": "zero_after_three",
+          "when": {
+            "kind": "all",
+            "conditions": [
+              {
+                "kind": "compare",
+                "metric": "answered_count",
+                "operator": "gte",
+                "value": 3
+              },
+              {
+                "kind": "compare",
+                "metric": "correct_count",
+                "operator": "eq",
+                "value": 0
+              }
+            ]
+          },
+          "goto": "basics"
+        }
+      ],
+      "next": "challenge"
+    },
+    {
+      "id": "basics",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "Le premier indice est ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        }
+      ],
+      "answer": {
+        "choice": "a",
+        "explanation": "On commence à zéro."
+      },
+      "routes": [],
+      "next": "end"
+    },
+    {
+      "id": "challenge",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "[10, 20, 30][-2] vaut ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "10"
+        },
+        {
+          "id": "b",
+          "text": "20"
+        },
+        {
+          "id": "c",
+          "text": "30"
+        }
+      ],
+      "answer": {
+        "choice": "b",
+        "explanation": "-2 désigne l’avant-dernier élément."
+      },
+      "routes": [],
+      "next": "end"
+    }
+  ]
+}

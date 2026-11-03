@@ -1,0 +1,80 @@
+name: Release packages
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            binary: dqp
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: dqp.exe
+          - os: macos-15
+            target: aarch64-apple-darwin
+            binary: dqp
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            binary: dqp
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+          components: rustfmt
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify tag matches Cargo version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: python scripts/verify_tag.py "$RELEASE_TAG"
+      - run: cargo fmt --all -- --check
+      - run: cargo test --locked --target ${{ matrix.target }}
+      - run: cargo build --release --locked --target ${{ matrix.target }}
+      - name: Verify user-facing distribution
+        env:
+          DQP_BINARY: target/${{ matrix.target }}/release/${{ matrix.binary }}
+        run: python -m unittest discover -s scripts/tests -v
+      - name: Package executable, starter and licenses
+        run: python scripts/package.py --target ${{ matrix.target }} --binary target/${{ matrix.target }}/release/${{ matrix.binary }} --out dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+  draft:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: release-*
+          path: downloaded
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Collect packages and checksums
+        run: python scripts/collect_release.py downloaded dist
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: >-
+          gh release create "$RELEASE_TAG" dist/*
+          --verify-tag --draft --prerelease
+          --title "DQP $RELEASE_TAG — experimental"
+          --notes-file RELEASE_NOTES.md

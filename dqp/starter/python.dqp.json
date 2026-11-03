@@ -1,0 +1,96 @@
+{
+  "dqp_version": "1.0",
+  "id": "branching",
+  "title": "Révision des listes Python",
+  "description": "Vérifier la compréhension des indices et proposer un rattrapage ciblé.",
+  "start": "q1",
+  "settings": {
+    "feedback": "end"
+  },
+  "questions": [
+    {
+      "id": "q1",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "Que vaut [10, 20, 30][1] ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "10"
+        },
+        {
+          "id": "b",
+          "text": "20"
+        },
+        {
+          "id": "c",
+          "text": "30"
+        }
+      ],
+      "answer": {
+        "choice": "b",
+        "explanation": "L’indice 1 désigne le deuxième élément."
+      },
+      "routes": [
+        {
+          "id": "wrong_to_basics",
+          "when": {
+            "kind": "compare",
+            "metric": "last_answer.correct",
+            "operator": "eq",
+            "value": false
+          },
+          "goto": "basics"
+        }
+      ],
+      "next": "q2"
+    },
+    {
+      "id": "basics",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "Quel est l’indice du premier élément ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        }
+      ],
+      "answer": {
+        "choice": "a",
+        "explanation": "Les indices commencent à zéro."
+      },
+      "routes": [],
+      "next": "q2"
+    },
+    {
+      "id": "q2",
+      "concepts": [
+        "indices"
+      ],
+      "prompt": "Que vaut [4, 8][-1] ?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "4"
+        },
+        {
+          "id": "b",
+          "text": "8"
+        }
+      ],
+      "answer": {
+        "choice": "b",
+        "explanation": "L’indice -1 désigne le dernier élément."
+      },
+      "routes": [],
+      "next": "end"
+    }
+  ]
+}

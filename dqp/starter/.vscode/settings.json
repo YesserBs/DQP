@@ -1,0 +1,5 @@
+{
+  "json.schemas": [
+    { "fileMatch": ["*.dqp.json"], "url": "./.vscode/dqp.schema.json" }
+  ]
+}
