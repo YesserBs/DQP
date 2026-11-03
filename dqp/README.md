@@ -1,75 +1,75 @@
 # DQP · Diverging Questions Protocol
 
-**Un questionnaire qui s’adapte à vos réponses, avec un parcours explicable et un rapport à analyser.**
+**A questionnaire that adapts to your answers, with an explainable path and an analyzable report.**
 
-Écrivez ou faites générer un petit fichier JSON, lancez une commande, puis récupérez vos réponses et vos raisonnements dans un rapport JSON.
+Write or generate a small JSON file, run one command, and get your answers and reasoning in a JSON report.
 
 ```bash
-dqp run python.dqp.json --output resultat.json
+dqp run python.dqp.json --output result.json
 ```
 
-**Statut : version expérimentale 0.1.1 · format DQP 1.0 · licence MIT.** Les noms de versions désignent ce projet, sans certification par un organisme externe.
+**Status: experimental version 0.1.1 · DQP format 1.0 · MIT license.** Version names refer to this project and do not indicate external certification.
 
-## Je veux réviser
+## I want to study
 
-1. Ouvrez la section **Releases** du dépôt et téléchargez le paquet adapté à votre ordinateur. Si aucune release n’est encore publiée, utilisez l’installation depuis les sources décrite ci-dessous.
-2. Extrayez le paquet et suivez son fichier `INSTALLATION.md`. Avec un paquet précompilé, Rust et Cargo ne sont pas nécessaires.
-3. Ouvrez le dossier `starter` dans VS Code, puis lancez la commande ci-dessus.
+1. Open the repository's **Releases** section and download the package for your computer. If no release has been published yet, use the source installation below.
+2. Extract the package and follow its `INSTALLATION.md`. Rust and Cargo are not required for a prebuilt package.
+3. Open the `starter` directory in VS Code, then run the command above.
 
-Répondez avec `a`, `b` ou `c`. À chaque question, vous pouvez expliquer votre raisonnement ou simplement appuyer sur Entrée. Le fichier `resultat.json` contient les réponses, les corrections et les raisons du chemin suivi.
+Answer with `a`, `b`, or `c`. For each question, you can explain your reasoning or simply press Enter. The `result.json` file contains your answers, corrections, and the reasons for the path that was followed.
 
-Pour recommencer sans choisir un nom de sortie, lancez `dqp run python.dqp.json` : un nouveau rapport sera nommé automatiquement. DQP refuse d’écraser un rapport existant.
+To start again without choosing an output name, run `dqp run python.dqp.json`: a new report name will be generated automatically. DQP refuses to overwrite an existing report.
 
-[Installation](docs/INSTALLATION.md) · [Premier questionnaire](docs/QUICKSTART.md) · [Guide pour les IA](docs/v1/AI_GUIDE.md)
+[Installation](docs/INSTALLATION.en.md) · [First questionnaire](docs/QUICKSTART.en.md) · [AI guide](docs/v1/AI_GUIDE.md)
 
-## Demander un questionnaire à une IA
+## Ask an AI for a questionnaire
 
-Ouvrez le [guide autonome DQP 1.0](docs/v1/AI_GUIDE.md), copiez son URL publique et demandez :
+Open the [standalone DQP 1.0 guide](docs/v1/AI_GUIDE.md), copy its public URL, and ask:
 
 > Lis cette documentation : [URL du guide]. Génère uniquement un scénario DQP 1.0 pour réviser les listes Python, niveau débutant, avec un rattrapage sur les indices. Respecte exactement le format décrit. Si tu ne peux pas accéder au guide, indique-le avant de générer le fichier.
 
-Enregistrez le résultat dans `python.dqp.json`, puis vérifiez-le :
+Save the result as `python.dqp.json`, then validate it:
 
 ```bash
 dqp check python.dqp.json
 ```
 
-La documentation publiée peut être consultée par une IA disposant d’un accès web. Elle n’est pas automatiquement connue de tous les modèles. Le compilateur vérifie la conformité technique ; relisez les corrections pour leur exactitude pédagogique.
+Published documentation can be read by an AI with web access. It is not automatically known to every model. The compiler checks technical conformance; review corrections for pedagogical accuracy.
 
-## Pourquoi DQP ?
+## Why DQP?
 
-- **Adaptation explicite** : une erreur peut déclencher un exercice de rattrapage ; plusieurs échecs peuvent orienter vers les bases.
-- **Exécution déterministe** : les mêmes entrées sur le même programme et la même version du moteur donnent les mêmes résultats.
-- **Raisonnement facultatif** : les justifications sont conservées, sans être notées automatiquement.
-- **Rapport autonome** : questions, choix, corrections, compteurs et règles de transition sont enregistrés.
-- **Fonctionnement local** : pas de compte, clé API ou connexion IA imposée.
+- **Explicit adaptation**: an error can trigger a remedial exercise; repeated failures can redirect to the basics.
+- **Deterministic execution**: the same inputs, program, and engine version produce the same results.
+- **Optional reasoning**: justifications are retained but are not scored automatically.
+- **Self-contained report**: questions, choices, corrections, counters, and transition rules are recorded.
+- **Local operation**: no account, API key, or AI connection is required.
 
-## Une commande pour chaque besoin
+## One command for each task
 
 | Commande | Utilité |
 |---|---|
-| `dqp check python.dqp.json` | Vérifier le scénario sans le lancer |
-| `dqp run python.dqp.json` | Répondre et créer un rapport |
-| `dqp compile python.dqp.json --out python.dqpc` | Produire un programme compilé |
-| `dqp replay python.dqp.json resultat.json` | Vérifier les décisions du rapport |
+| `dqp check python.dqp.json` | Validate a scenario without running it |
+| `dqp run python.dqp.json` | Answer questions and create a report |
+| `dqp compile python.dqp.json --out python.dqpc` | Produce a compiled program |
+| `dqp replay python.dqp.json result.json` | Verify the report's decisions |
 
-Le dossier utilisateur ne contient pas `src/` ou `Cargo.toml`. Ceux-ci appartiennent au dépôt destiné aux contributeurs.
+The user directory does not need `src/` or `Cargo.toml`. Those files belong to the contributor repository.
 
-## Je veux développer DQP
+## I want to develop DQP
 
-Installez Rust et Cargo depuis [rust-lang.org](https://rust-lang.org/tools/install/), puis depuis ce dépôt :
+Install Rust and Cargo from [rust-lang.org](https://rust-lang.org/tools/install/), then run these commands from this repository:
 
 ```bash
 cargo test --locked
 cargo install --path . --locked
 ```
 
-Assurez-vous que `~/.cargo/bin` est dans votre PATH. Vous pouvez ensuite utiliser `dqp` dans n’importe quel dossier, notamment `starter/`. Sous Ubuntu, la compilation nécessite aussi les outils d’édition de liens usuels, disponibles dans `build-essential`.
+Make sure `~/.cargo/bin` is in your PATH. You can then use `dqp` from any directory, including `starter/`. On Ubuntu, compilation also requires the usual linker tools, available in `build-essential`.
 
 [Contribuer](CONTRIBUTING.md) · [Architecture](docs/ARCHITECTURE.md) · [Spécification](docs/SPECIFICATION.md) · [Validation](docs/VALIDATION.md) · [Publier une release](docs/PUBLISHING.md)
 
-## Périmètre actuel
+## Current scope
 
-QCM à réponse unique, parcours sans boucle, compteurs entiers, corrections immédiates ou finales, justifications libres sur une ligne. Les traces restent accessibles sans IA. Le moteur ne vérifie pas la vérité des corrections et ne mesure pas une maîtrise pédagogique certifiée. Il n’offre pas de dispositif anti-triche ou de signature des rapports.
+Single-choice questions, acyclic paths, integer counters, immediate or final corrections, and free one-line justifications. Traces remain accessible without AI. The engine does not verify the truth of corrections or measure certified pedagogical mastery. It does not provide anti-cheating features or report signatures.
 
-Les versions précompilées sont produites par le workflow de release. Consultez le statut de ce workflow et les assets réellement publiés ; la présence du fichier de workflow n’atteste pas à elle seule une compatibilité plateforme.
+Prebuilt versions are produced by the release workflow. Check the workflow status and the assets that were actually published; the presence of a workflow file alone does not guarantee platform compatibility.
