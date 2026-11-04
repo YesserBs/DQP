@@ -1,6 +1,6 @@
 # Publier DQP sur GitHub
 
-Ce dépôt est préparé pour une version expérimentale **0.1.1**. La documentation est lisible directement sur GitHub ; aucun hébergement web séparé n’est nécessaire. Les actions décrites ci-dessous doivent être réalisées sur votre propre dépôt.
+Ce dépôt est préparé pour une version expérimentale **0.1.2**. La documentation est lisible directement sur GitHub ; aucun hébergement web séparé n’est nécessaire. Les actions décrites ci-dessous doivent être réalisées sur votre propre dépôt.
 
 ## 1. Préparer le dépôt
 
@@ -11,7 +11,7 @@ Pour un nouveau dépôt, créez d’abord un dépôt GitHub vide, idéalement pu
 ```bash
 git init -b main
 git add .
-git commit -m "Prepare DQP 0.1.1 public distribution"
+git commit -m "Prepare DQP 0.1.2 public distribution"
 ```
 
 Ajoutez ensuite l’URL réelle du dépôt comme remote `origin` avec `git remote add origin URL_DU_DEPOT`. Cette commande est inutile si `origin` existe déjà. Remplacez le libellé par l’URL réelle ; aucune URL de dépôt n’a été inventée dans cette livraison.
@@ -24,7 +24,7 @@ git diff
 cargo test --locked
 cargo fmt --all -- --check
 git add .
-git commit -m "Prepare DQP 0.1.1 public distribution"
+git commit -m "Prepare DQP 0.1.2 public distribution"
 git push -u origin HEAD
 ```
 
@@ -39,9 +39,11 @@ Dans **Actions**, attendre le succès de `DQP checks`. Le workflow teste Linux, 
 Le tag doit être identique à la version Cargo, précédée de `v` :
 
 ```bash
-git tag -a v0.1.1 -m "DQP 0.1.1 experimental"
-git push origin v0.1.1
+git tag -a v0.1.2 -m "DQP 0.1.2 experimental"
+git push origin v0.1.2
 ```
+
+Les workflows GitHub sont à la racine du dépôt (`.github/workflows/`), tandis que le projet Rust reste dans `dqp/`. Le `working-directory: dqp` permet aux commandes de trouver `Cargo.toml` et les scripts ; les chemins d’artefacts sont explicitement préfixés par `dqp/`.
 
 Le workflow `Release packages` vérifie la version, lance les tests, compile et prépare quatre paquets natifs plus le starter. Il crée ensuite une **release en brouillon et marquée pre-release**, avec SHA256SUMS.txt et les notes.
 
@@ -60,7 +62,7 @@ Ouvrez le brouillon dans **Releases**, vérifiez les cinq archives, les sommes d
 Une fois le tag poussé, générez le lien exact depuis votre URL de dépôt :
 
 ```bash
-python3 scripts/ai_link.py URL_HTTPS_REELLE_DU_DEPOT
+python3 dqp/scripts/ai_link.py URL_HTTPS_REELLE_DU_DEPOT
 ```
 
 Sous Windows, utilisez `python` si `python3` n’est pas disponible. Le script affiche une URL épinglée au tag `v0.1.1` et un prompt prêt à adapter. Cette URL sera accessible si le dépôt est public et le tag existe. Vous pouvez également ouvrir `docs/v1/AI_GUIDE.md` sur GitHub, sélectionner le tag et copier le lien.
@@ -72,6 +74,7 @@ Une IA sans navigation ou sans accès au dépôt devra recevoir le contenu du gu
 Avec Rust, Cargo et Python disponibles :
 
 ```bash
+cd dqp
 cargo build --release --locked
 python3 scripts/package.py --target x86_64-unknown-linux-gnu --binary target/release/dqp --out dist
 ```
