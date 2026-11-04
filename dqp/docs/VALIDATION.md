@@ -1,11 +1,11 @@
-# Validation de la préparation de publication 0.1.1
+# Validation de la préparation de publication 0.1.2
 
-Vérifications locales terminées le 3 novembre 2026 sur Linux x86-64. La version 0.1.1 modifie la distribution et la documentation ; les fichiers Rust du moteur sont inchangés par rapport à 0.1.0. La version logicielle intégrée au rapport change naturellement.
+Vérifications locales terminées le 4 novembre 2026 sur Linux x86-64. La version 0.1.2 ajoute la reprise des sessions interrompues et modifie la distribution et la documentation.
 
 | Vérification | Résultat |
 |---|---|
 | Suite Rust `cargo test --locked` | 41 tests réussis, aucun échec |
-| Compilation optimisée 0.1.1 | réussie |
+| Compilation optimisée 0.1.2 | réussie |
 | Formatage Rust | conforme |
 | Tests Python de distribution | 6 réussis |
 | Scénario starter et rejeu | réussis |

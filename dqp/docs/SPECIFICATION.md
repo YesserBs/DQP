@@ -1,6 +1,6 @@
 # Spécification DQP 1.0
 
-Ce document définit le comportement implémenté dans DQP 0.1.1. Les structures Rust et les tests constituent la référence exécutable. Le JSON Schema facilite l’édition mais ne remplace pas les vérifications du compilateur.
+Ce document définit le comportement implémenté dans DQP 0.1.2. Les structures Rust et les tests constituent la référence exécutable. Le JSON Schema facilite l’édition mais ne remplace pas les vérifications du compilateur.
 
 ## 1. Source
 

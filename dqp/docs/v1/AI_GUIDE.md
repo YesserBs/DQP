@@ -1,6 +1,6 @@
 # DQP 1.0 — guide autonome pour générer un questionnaire
 
-Ce document suffit pour produire un scénario valide du profil pédagogique DQP 1.0. Il décrit le contrat de l’implémentation 0.1.1. Le numéro du logiciel et celui du langage sont distincts.
+Ce document suffit pour produire un scénario valide du profil pédagogique DQP 1.0. Il décrit le contrat de l’implémentation 0.1.2. Le numéro du logiciel et celui du langage sont distincts.
 
 ## Consigne à l’IA
 

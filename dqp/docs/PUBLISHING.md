@@ -65,7 +65,7 @@ Une fois le tag poussé, générez le lien exact depuis votre URL de dépôt :
 python3 dqp/scripts/ai_link.py URL_HTTPS_REELLE_DU_DEPOT
 ```
 
-Sous Windows, utilisez `python` si `python3` n’est pas disponible. Le script affiche une URL épinglée au tag `v0.1.1` et un prompt prêt à adapter. Cette URL sera accessible si le dépôt est public et le tag existe. Vous pouvez également ouvrir `docs/v1/AI_GUIDE.md` sur GitHub, sélectionner le tag et copier le lien.
+Sous Windows, utilisez `python` si `python3` n’est pas disponible. Le script affiche une URL épinglée au tag `v0.1.2` et un prompt prêt à adapter. Cette URL sera accessible si le dépôt est public et le tag existe. Vous pouvez également ouvrir `docs/v1/AI_GUIDE.md` sur GitHub, sélectionner le tag et copier le lien.
 
 Une IA sans navigation ou sans accès au dépôt devra recevoir le contenu du guide. Publier le dépôt ou ajouter `llms.txt` ne garantit ni l’indexation ni la consultation automatique.
 

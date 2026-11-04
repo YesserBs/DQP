@@ -39,14 +39,14 @@ class DistributionTests(unittest.TestCase):
         self.assertFalse((ROOT/'starter/src').exists())
 
     def test_tag_guard(self):
-        for tag,expected in [('v0.1.1',0),('v9.9.9',1)]:
+        for tag,expected in [('v0.1.2',0),('v9.9.9',1)]:
             result=subprocess.run([sys.executable,str(ROOT/'scripts/verify_tag.py'),tag],capture_output=True)
             self.assertEqual(result.returncode,expected)
 
     def test_versioned_documentation_link(self):
         result=subprocess.run([sys.executable,str(ROOT/'scripts/ai_link.py'),'https://github.com/example/dqp.git'],text=True,capture_output=True)
         self.assertEqual(result.returncode,0)
-        self.assertIn('https://github.com/example/dqp/blob/v0.1.1/docs/v1/AI_GUIDE.md',result.stdout)
+        self.assertIn('https://github.com/example/dqp/blob/v0.1.2/docs/v1/AI_GUIDE.md',result.stdout)
 
     @unittest.skipIf(os.name=='nt','Unix installer; Windows script requires PowerShell testing on Windows')
     def test_installer_and_no_overwrite(self):
