@@ -6,6 +6,7 @@
 - Les rapports mémorisent le chemin exact du scénario source.
 - La reprise vérifie l’empreinte, le parcours et les résultats avant de continuer.
 
+
 ## 0.1.1 — préparation de publication
 
 - README centré sur la création et l’exécution d’un questionnaire.
