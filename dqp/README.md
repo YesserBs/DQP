@@ -8,7 +8,7 @@ Write or generate a small JSON file, run one command, and get your answers and r
 dqp run python.dqp.json --output result.json
 ```
 
-**Status: experimental version 0.1.1 · DQP format 1.0 · MIT license.** Version names refer to this project and do not indicate external certification.
+**Status: experimental version 0.1.2 · DQP format 1.0 · MIT license.** Version names refer to this project and do not indicate external certification.
 
 ## I want to study
 
@@ -19,6 +19,14 @@ dqp run python.dqp.json --output result.json
 Answer with `a`, `b`, or `c`. For each question, you can explain your reasoning or simply press Enter. The `result.json` file contains your answers, corrections, and the reasons for the path that was followed.
 
 To start again without choosing an output name, run `dqp run python.dqp.json`: a new report name will be generated automatically. DQP refuses to overwrite an existing report.
+
+If you stop a quiz with `:quit`, EOF, or Ctrl-C, resume it later with:
+
+```bash
+dqp continue result.json
+```
+
+The report records the source scenario path and validates it before resuming.
 
 [Installation](docs/INSTALLATION.en.md) · [First questionnaire](docs/QUICKSTART.en.md) · [AI guide](docs/v1/AI_GUIDE.md)
 
@@ -50,6 +58,7 @@ Published documentation can be read by an AI with web access. It is not automati
 |---|---|
 | `dqp check python.dqp.json` | Validate a scenario without running it |
 | `dqp run python.dqp.json` | Answer questions and create a report |
+| `dqp continue result.json` | Resume an interrupted quiz |
 | `dqp compile python.dqp.json --out python.dqpc` | Produce a compiled program |
 | `dqp replay python.dqp.json result.json` | Verify the report's decisions |
 

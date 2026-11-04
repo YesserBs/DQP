@@ -77,6 +77,21 @@ pub struct Engine {
     steps: Vec<Step>,
 }
 impl Engine {
+    pub fn resume(artifact: Artifact, report: &Report) -> Result<Self, Diagnostic> {
+        let mut engine = Self::new(artifact)
+            .map_err(|diagnostics| diagnostics.into_iter().next().expect("diagnostic"))?;
+        for step in &report.steps {
+            engine.submit(step.input.clone())?;
+        }
+        if engine.report() != *report {
+            return Err(Diagnostic::plain(
+                "DQP-E310",
+                "Le rapport ne correspond pas au scénario ou à ses résultats déterministes.",
+            ));
+        }
+        Ok(engine)
+    }
+
     pub fn new(artifact: Artifact) -> Result<Self, Vec<Diagnostic>> {
         validate_artifact(&artifact)?;
         let current = Some(artifact.program.entry);
@@ -235,12 +250,6 @@ fn evaluate(c: &Condition, counters: &Counters, correct: bool, choice: &str) -> 
 }
 /// Recompute and compare every deterministic report field; timestamps belong outside Report.
 pub fn replay(artifact: Artifact, report: &Report) -> Result<(), Diagnostic> {
-    let mut engine = Engine::new(artifact).map_err(|e| e.into_iter().next().unwrap())?;
-    for step in &report.steps {
-        engine.submit(step.input.clone())?;
-    }
-    if engine.report() != *report {
-        return Err(Diagnostic::plain("DQP-E310", "Le rapport ne correspond pas au rejeu (version, source, parcours ou résultats différents)."));
-    }
+    Engine::resume(artifact, report)?;
     Ok(())
 }

@@ -48,6 +48,13 @@ enum Command {
         #[arg(long)]
         output: Option<PathBuf>,
     },
+    /// Reprendre une session interrompue depuis son rapport.
+    Continue {
+        report: PathBuf,
+        /// Source à utiliser pour les anciens rapports qui ne mémorisent pas son chemin.
+        #[arg(long)]
+        input: Option<PathBuf>,
+    },
     /// Rejouer les réponses et vérifier tous les résultats déterministes.
     Replay { input: PathBuf, report: PathBuf },
 }
@@ -62,6 +69,8 @@ struct SessionFile {
 struct Metadata {
     started_unix_ms: u128,
     updated_unix_ms: u128,
+    #[serde(default)]
+    source_path: String,
     reason: String,
     feedback_written: Vec<String>,
 }
@@ -164,28 +173,46 @@ fn prompt(
         }
     }
 }
-fn run(input: &Path, output: Option<PathBuf>) -> AppResult<()> {
+fn run(input: &Path, output: Option<PathBuf>, existing: Option<SessionFile>) -> AppResult<()> {
     let artifact = load(input)?;
-    let mut engine = Engine::new(artifact).map_err(|diagnostics| Failure {
-        diagnostics,
-        file: input.display().to_string(),
-        source: String::new(),
-        exit: 2,
-    })?;
+    let mut engine = match existing.as_ref() {
+        Some(session) => {
+            Engine::resume(artifact, &session.result).map_err(|diagnostic| Failure {
+                diagnostics: vec![diagnostic],
+                file: input.display().to_string(),
+                source: String::new(),
+                exit: 3,
+            })?
+        }
+        None => Engine::new(artifact).map_err(|diagnostics| Failure {
+            diagnostics,
+            file: input.display().to_string(),
+            source: String::new(),
+            exit: 2,
+        })?,
+    };
     let output = output
         .unwrap_or_else(|| PathBuf::from(format!("session-{}-{}.json", now(), std::process::id())));
+    let resuming = existing.is_some();
     let started = now();
-    let mut session = SessionFile {
+    let mut session = existing.unwrap_or_else(|| SessionFile {
         result: engine.report(),
         metadata: Metadata {
             started_unix_ms: started,
             updated_unix_ms: started,
+            source_path: input.display().to_string(),
             reason: "in_progress".into(),
             feedback_written: vec![],
         },
+    });
+    if session.metadata.source_path.is_empty() {
+        session.metadata.source_path = input.display().to_string();
     };
-    // Reserve output and verify write access BEFORE asking the first question.
-    save(&output, &session, true)?;
+    if resuming {
+        save(&output, &session, false)?;
+    } else {
+        save(&output, &session, true)?;
+    }
     let stopped = Arc::new(AtomicBool::new(false));
     let flag = Arc::clone(&stopped);
     ctrlc::set_handler(move || flag.store(true, Ordering::SeqCst))
@@ -264,14 +291,16 @@ fn run(input: &Path, output: Option<PathBuf>) -> AppResult<()> {
         if engine.feedback() == &Feedback::End {
             print_line("\nCorrections :")?;
             for s in &engine.report().steps {
-                print_line(&format!(
-                    "{} — {} : {}",
-                    s.question.id, s.question.answer.choice, s.question.answer.explanation
-                ))?;
-                session
-                    .metadata
-                    .feedback_written
-                    .push(s.question.id.clone());
+                if !session.metadata.feedback_written.contains(&s.question.id) {
+                    print_line(&format!(
+                        "{} — {} : {}",
+                        s.question.id, s.question.answer.choice, s.question.answer.explanation
+                    ))?;
+                    session
+                        .metadata
+                        .feedback_written
+                        .push(s.question.id.clone());
+                }
             }
         }
         Ok("completed".into())
@@ -325,7 +354,26 @@ fn execute(command: Command) -> AppResult<()> {
             save(&out, &a, true)?;
             print_line(&format!("Compilation réussie : {}", out.display()))
         }
-        Command::Run { input, output } => run(&input, output),
+        Command::Run { input, output } => run(&input, output, None),
+        Command::Continue { report, input } => {
+            let text = read(&report)?;
+            let session: SessionFile = serde_json::from_str(&text)
+                .map_err(|e| fail(format!("Rapport {} invalide : {e}", report.display())))?;
+            if session.result.status == Status::Completed {
+                return Err(fail(
+                    "Cette session est déjà terminée ; aucune reprise nécessaire.",
+                ));
+            }
+            let source = input
+                .or_else(|| {
+                    (!session.metadata.source_path.is_empty())
+                        .then(|| PathBuf::from(&session.metadata.source_path))
+                })
+                .ok_or_else(|| {
+                    fail("Le rapport ne contient pas le chemin de sa source ; utilisez --input.")
+                })?;
+            run(&source, Some(report), Some(session))
+        }
         Command::Replay { input, report } => {
             let a = load(&input)?;
             let text = read(&report)?;

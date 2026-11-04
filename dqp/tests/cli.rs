@@ -146,3 +146,42 @@ fn quit_before_justification_does_not_commit_choice() {
     let r: Value = serde_json::from_slice(&std::fs::read(out).unwrap()).unwrap();
     assert_eq!(r["result"]["counters"]["answered_count"], 0);
 }
+
+#[test]
+fn continue_resumes_interrupted_session() {
+    let dir = tempfile::tempdir().unwrap();
+    let out = dir.path().join("partial.json");
+    let mut child = cli()
+        .args(["run", &source(), "--output", out.to_str().unwrap()])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    child.stdin.take().unwrap().write_all(b"a\n\n").unwrap();
+    assert_eq!(child.wait().unwrap().code(), Some(130));
+
+    let mut resumed = cli()
+        .args(["continue", out.to_str().unwrap()])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::piped())
+        .spawn()
+        .unwrap();
+    resumed
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(b"a\n\nb\n\n")
+        .unwrap();
+    let resumed = resumed.wait_with_output().unwrap();
+    assert!(
+        resumed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&resumed.stderr)
+    );
+    let report: Value = serde_json::from_slice(&std::fs::read(&out).unwrap()).unwrap();
+    assert_eq!(report["result"]["status"], "completed");
+    assert_eq!(report["result"]["steps"].as_array().unwrap().len(), 3);
+    assert_eq!(report["metadata"]["source_path"], source());
+}

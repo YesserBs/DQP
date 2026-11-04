@@ -2,6 +2,12 @@
 
 L’installation se fait une fois. Ensuite, ouvrez un dossier contenant votre questionnaire et lancez `dqp run questionnaire.dqp.json`.
 
+Pour reprendre un questionnaire interrompu, utilisez le rapport sauvegardé :
+
+```bash
+dqp continue resultat.json
+```
+
 ## Choisir le paquet
 
 Dans la section **Releases** du dépôt :
@@ -85,6 +91,14 @@ dqp --version
 Si Cargo vient d’être installé sous Linux/macOS : `source "$HOME/.cargo/env"`. Sous Ubuntu, `sudo apt install build-essential` fournit les outils de compilation système si nécessaire.
 
 ## Mise à jour et désinstallation
+
+Pour mettre à jour DQP, téléchargez le nouveau paquet depuis la page **Releases**, remplacez l’ancien exécutable puis vérifiez la version :
+
+```bash
+dqp --version
+```
+
+La variable `PATH` ne contient pas une version de DQP et ne se met pas à jour automatiquement : `dqp` utilise le premier exécutable trouvé dans le `PATH`. Fermez et rouvrez le terminal ou VS Code après une modification du `PATH`.
 
 Les installateurs des paquets n’écrasent pas une version existante. Renommez le binaire précédent avant d’installer la nouvelle version ; conservez-le si vous devez rejouer des rapports produits avec cette version. Les rapports sont liés à la version du moteur : une migration automatique n’est pas fournie.
 

@@ -73,7 +73,7 @@ Cargo installs the command in `~/.cargo/bin`. Ensure that directory is in your P
 
 ## Updating and uninstalling
 
-Package installers do not overwrite an existing installation. Rename the previous executable before installing a new version if you need to keep it for replaying reports. To remove a Cargo installation:
+To update, download the new package from the repository's **Releases** page, extract it, rename or remove the previous executable, then run the installer again. Package installers do not overwrite an existing installation. Check the installed version with `dqp --version`; the command uses the executable found first in your `PATH`, not an automatically updated environment variable. To remove a Cargo installation:
 
 ```bash
 cargo uninstall dqp
