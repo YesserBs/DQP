@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import stat
 import tarfile
 import tempfile
 import zipfile
@@ -25,7 +26,15 @@ def version():
 def zip_tree(folder, output):
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(folder.rglob('*')):
-            if path.is_file(): archive.write(path, path.relative_to(folder.parent))
+            if not path.is_file():
+                continue
+            relative = path.relative_to(folder.parent).as_posix()
+            info = zipfile.ZipInfo(relative, date_time=(1980, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.create_system = 3
+            info.external_attr = (stat.S_IFREG | stat.S_IWUSR | stat.S_IRUSR) << 16
+            with path.open('rb') as source:
+                archive.writestr(info, source.read())
 
 def checksums(output):
     paths = sorted(p for p in output.iterdir() if p.suffix == '.zip' or p.name.endswith('.tar.gz'))
